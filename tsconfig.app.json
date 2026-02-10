@@ -1,0 +1,49 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["./apps/studio-web/src/*"],
+      "@repo/ui-ai-elements": ["./packages/ui-ai-elements/src/index.ts"],
+      "@repo/ui-ai-elements/*": ["./packages/ui-ai-elements/src/*"],
+      "@repo/ui-shadcn": ["./packages/ui-shadcn/src/index.ts"],
+      "@repo/ui-shadcn/*": ["./packages/ui-shadcn/src/*"],
+      "@repo/ui-reka": ["./packages/ui-reka/src/index.ts"],
+      "@repo/ui-reka/*": ["./packages/ui-reka/src/*"],
+      "@repo/common": ["./packages/common/src/index.ts"],
+      "@repo/common/*": ["./packages/common/src/*"],
+      "@repo/generator": ["./packages/generator/src/index.ts"],
+      "@repo/generator/*": ["./packages/generator/src/*"],
+      "@repo/workflow": ["./packages/workflow/src/index.ts"],
+      "@repo/workflow/*": ["./packages/workflow/*"]
+    },
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "apps/studio-web/src/**/*.ts",
+    "apps/studio-web/src/**/*.tsx",
+    "apps/studio-web/src/**/*.vue",
+    "packages/ui-ai-elements/src/**/*.ts",
+    "packages/ui-ai-elements/src/**/*.vue",
+    "packages/ui-shadcn/src/**/*.ts",
+    "packages/ui-shadcn/src/**/*.vue",
+    "packages/ui-reka/src/**/*.ts",
+    "packages/generator/src/**/*.ts",
+    "packages/generator/src/**/*.vue",
+    "packages/common/src/**/*.ts",
+    "packages/common/src/**/*.vue",
+    "packages/workflow/src/**/*.ts",
+    "packages/workflow/src/**/*.vue",
+    "packages/workflow/playground/src/**/*.ts",
+    "packages/workflow/playground/src/**/*.vue"
+  ]
+}
