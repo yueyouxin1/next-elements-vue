@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import type { InputGroupButtonProps } from "."
+import type { HTMLAttributes } from "vue"
+import type { InputGroupButtonVariants } from "."
+import type { ButtonVariants } from "@repo/ui-shadcn/components/ui/button"
 import { cn } from "@repo/ui-shadcn/lib/utils"
-import { Button } from '@repo/ui-shadcn/components/ui/button'
+import { Button } from "@repo/ui-shadcn/components/ui/button"
 import { inputGroupButtonVariants } from "."
+
+interface InputGroupButtonProps {
+  variant?: ButtonVariants["variant"]
+  size?: InputGroupButtonVariants["size"]
+  class?: HTMLAttributes["class"]
+}
 
 const props = withDefaults(defineProps<InputGroupButtonProps>(), {
   size: "xs",

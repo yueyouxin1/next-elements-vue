@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { MonacoEditor, type MonacoEditorExpose } from "@repo/common"
+import { MonacoEditor, type MonacoEditorExpose } from "@repo/editor"
 import { Button } from "@repo/ui-shadcn/components/ui/button"
 import {
   Card,

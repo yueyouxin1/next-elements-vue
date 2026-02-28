@@ -25,14 +25,28 @@ function createEvent(
 function getExecutionOrder(graph: WorkflowGraphDef): WorkflowCanvasNode[] {
   const visibleNodes = graph.nodes.filter(node => node.type !== "workflowGroup")
   const nodeMap = new Map(visibleNodes.map(node => [node.id, node]))
+  const visibleNodeIdSet = new Set(visibleNodes.map(node => node.id))
+  const visibleEdges = graph.edges.filter(edge => visibleNodeIdSet.has(edge.source) && visibleNodeIdSet.has(edge.target))
   const indegree = new Map<string, number>()
 
   for (const node of visibleNodes) {
     indegree.set(node.id, 0)
   }
 
-  for (const edge of graph.edges) {
+  for (const edge of visibleEdges) {
     indegree.set(edge.target, (indegree.get(edge.target) ?? 0) + 1)
+  }
+
+  for (const node of visibleNodes) {
+    if (typeof node.data.loopScopeId !== "string") {
+      continue
+    }
+
+    if (!visibleNodeIdSet.has(node.data.loopScopeId)) {
+      continue
+    }
+
+    indegree.set(node.id, (indegree.get(node.id) ?? 0) + 1)
   }
 
   const queue = visibleNodes
@@ -49,7 +63,7 @@ function getExecutionOrder(graph: WorkflowGraphDef): WorkflowCanvasNode[] {
 
     order.push(current)
 
-    for (const edge of graph.edges) {
+    for (const edge of visibleEdges) {
       if (edge.source !== current.id) {
         continue
       }
@@ -61,6 +75,18 @@ function getExecutionOrder(graph: WorkflowGraphDef): WorkflowCanvasNode[] {
         if (nextNode) {
           queue.push(nextNode)
         }
+      }
+    }
+
+    for (const scopedNode of visibleNodes) {
+      if (scopedNode.data.loopScopeId !== current.id) {
+        continue
+      }
+
+      const nextInDegree = (indegree.get(scopedNode.id) ?? 0) - 1
+      indegree.set(scopedNode.id, nextInDegree)
+      if (nextInDegree === 0) {
+        queue.push(scopedNode)
       }
     }
   }

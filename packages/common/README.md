@@ -3,6 +3,5 @@
 Cross-app reusable modules.
 
 - `src/i18n/*`: shared locale resources and i18n contracts.
-- `src/components/codemirror-md-editor/CodeMirrorMdEditor.vue`: markdown editor based on CodeMirror 6 with expression popup/replace/highlight.
-- `src/components/monaco/MonacoEditor.vue`: production-ready Monaco editor wrapper.
 - `src/tools/expression-tool.js`: shared expression evaluation tool.
+- Editor-related components (including `param-schema-editor`) moved to `@repo/editor` and are re-exported by `@repo/common` for compatibility.

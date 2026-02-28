@@ -54,6 +54,8 @@ const iconClass = computed(() => {
       return "bg-cyan-100 text-cyan-600"
     case "LLMNode":
       return "bg-violet-100 text-violet-600"
+    case "Loop":
+      return "bg-emerald-100 text-emerald-600"
     default:
       return "bg-slate-100 text-slate-600"
   }
@@ -154,6 +156,13 @@ const shortLabel = computed(() => {
       id="source"
       type="source"
       :position="Position.Right"
+      class="!h-3.5 !w-3.5 !border-[1.5px] !border-white !bg-[#5d63ff] !shadow-[0_0_0_1px_rgba(93,99,255,0.28)]"
+    />
+    <Handle
+      v-if="data.registryId === 'Loop'"
+      id="loop-body-source"
+      type="source"
+      :position="Position.Bottom"
       class="!h-3.5 !w-3.5 !border-[1.5px] !border-white !bg-[#5d63ff] !shadow-[0_0_0_1px_rgba(93,99,255,0.28)]"
     />
   </article>

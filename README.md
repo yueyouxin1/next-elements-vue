@@ -43,7 +43,8 @@ next-elements-vue/
 ├── apps/
 │   └── studio-web/                  # 当前应用壳（路由、布局、启动装配、Playground 承载）
 ├── packages/
-│   ├── common/                      # 共享基础能力（MonacoEditor、MdEditor、i18n、tools）
+│   ├── common/                      # 共享基础能力（i18n、tools）
+│   ├── editor/                      # 编辑器子包（MonacoEditor、MdEditor、CodeMirrorEditor、CodeMirrorMdEditor、ParamSchemaEditor）
 │   ├── generator/                   # 业务生成器能力（动态表单）
 │   ├── ui-reka/                     # reka-ui primitives 导出层
 │   ├── ui-shadcn/                   # 设计系统组件层（基于 ui-reka）
@@ -90,12 +91,21 @@ next-elements-vue/
 
 核心能力：
 
-- `MonacoEditor`：可复用代码编辑器封装
-- `MdEditor`：Markdown 编辑器（基于 Monaco）
-  - 支持表达式触发弹窗
-  - 支持表达式背景高亮
 - 共享 i18n 文案
 - 工具模块（如 expression tool）
+- 兼容重导出：编辑器能力通过 `@repo/editor` 提供，`@repo/common` 保留导出兼容
+
+### `@repo/editor`
+
+位置：`packages/editor`
+
+核心能力：
+
+- `MonacoEditor`：可复用代码编辑器封装
+- `MdEditor`：Markdown 编辑器（基于 Monaco）
+- `CodeMirrorEditor`：可复用 CodeMirror 代码编辑器
+- `CodeMirrorMdEditor`：Markdown 编辑器（基于 CodeMirrorEditor，支持表达式 replace/highlight）
+- `ParamSchemaEditor`：参数 Schema 编辑器能力（regular/professional）
 
 ### `@repo/generator`
 
@@ -148,7 +158,10 @@ Demo 注册位置：
 当前示例（部分）：
 
 - `monaco-editor`
-- `md-editor`
+- `codemirror-editor`
+- `monaco-expression-md-editor`
+- `codemirror-expression-md-editor`
+- `param-schema-editor`
 - `form-generator`
 - `expression-editor-next`
 
@@ -156,7 +169,7 @@ Demo 注册位置：
 
 - 互相依赖的 Demo 组件放在同一目录
 - 示例：
-  - `apps/studio-web/src/components/playground/md-editor/*`
+  - `apps/studio-web/src/components/playground/expression-md-editor/*`
   - `apps/studio-web/src/components/playground/form-generator/*`
 
 ---
@@ -205,6 +218,7 @@ pnpm check:aliases
 ### 可用别名
 
 - `@app/*` -> `apps/studio-web/src/*`
+- `@repo/editor/*`
 - `@repo/common/*`
 - `@repo/generator/*`
 - `@repo/ui-reka/*`
@@ -285,6 +299,7 @@ pnpm check:aliases
 - Packages 总览：`packages/README.md`
 - Infra 说明：`infra/README.md`
 - Common 包：`packages/common/README.md`
+- Editor 包：`packages/editor/README.md`
 - Generator 包：`packages/generator/README.md`
 - UI Shadcn 包：`packages/ui-shadcn/README.md`
 - UI AI Elements 包：`packages/ui-ai-elements/README.md`

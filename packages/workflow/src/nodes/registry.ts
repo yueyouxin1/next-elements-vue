@@ -91,13 +91,13 @@ export const workflowNodeRegistry: Record<WorkflowRegistryId, WorkflowNodeRegist
     },
   },
   Loop: {
-    label: "循环体",
+    label: "循环",
     description: "循环执行子流程",
     chipClass: "bg-emerald-100 text-emerald-700",
     headerClass: "border-emerald-200 bg-emerald-50/80",
     defaultData: {
       registryId: "Loop",
-      name: "循环体",
+      name: "循环",
       description: "处理批量聚合",
       config: { loopType: "list" },
       inputs: [{ name: "loop_list", type: "array" }],

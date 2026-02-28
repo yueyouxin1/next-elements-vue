@@ -60,6 +60,9 @@ export type WorkflowCanvasNodeData = WorkflowNodeData & {
   subtitle?: string
   muted?: boolean
   groupLabel?: string
+  isLoopBody?: boolean
+  loopPartnerId?: string
+  loopScopeId?: string
 }
 
 export type WorkflowCanvasNode = Omit<FlowNode<WorkflowCanvasNodeData>, "data"> & {

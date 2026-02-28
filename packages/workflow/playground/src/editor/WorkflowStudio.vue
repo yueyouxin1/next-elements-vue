@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WorkflowRegistryId, WorkflowStudioMode } from "../../../src/base"
+import type { WorkflowCanvasNode, WorkflowRegistryId, WorkflowStudioMode } from "../../../src/base"
 import type { ParameterSchema } from "../../../src/base"
 import { computed, ref, toRef } from "vue"
 import { Background } from "@vue-flow/background"
@@ -57,6 +57,7 @@ const {
   saveDraft,
   runWorkflow,
   deleteSelectedNode,
+  deleteNodesWithLoopLifecycle,
   updateSelectedNode,
   updateSelectedNodeConfigField,
 } = useWorkflowStudio({ mode: currentMode })
@@ -122,6 +123,10 @@ function onNodeClick(event: { node: { id: string } }): void {
 
 function onPaneClick(): void {
   selectNode(null)
+}
+
+function onNodesDelete(deletedNodes: Array<Pick<WorkflowCanvasNode, "id" | "data">>): void {
+  deleteNodesWithLoopLifecycle(deletedNodes)
 }
 
 function handleAddNode(registryId: string): void {
@@ -190,8 +195,8 @@ function handleSchemaUpdate(payload: {
       </div>
     </header>
 
-    <div class="flex min-h-0 flex-1">
-      <div class="relative min-w-0 flex-1">
+    <div class="min-h-0 flex-1">
+      <div class="relative h-full min-w-0">
         <VueFlow
           v-model:nodes="nodes"
           v-model:edges="edges"
@@ -205,7 +210,7 @@ function handleSchemaUpdate(payload: {
           :fit-view-on-init="true"
           :select-nodes-on-drag="true"
           :pan-on-scroll="true"
-          :pan-on-drag="[1, 2]"
+          :pan-on-drag="[0, 1]"
           :zoom-on-scroll="true"
           :zoom-on-pinch="true"
           :zoom-on-double-click="false"
@@ -213,6 +218,7 @@ function handleSchemaUpdate(payload: {
           @init="onFlowInit"
           @connect="onConnect"
           @node-click="onNodeClick"
+          @nodes-delete="onNodesDelete"
           @pane-click="onPaneClick"
           @move-end="refreshZoomPercent"
         >
@@ -314,20 +320,23 @@ function handleSchemaUpdate(payload: {
             </Button>
           </div>
         </div>
-      </div>
 
-      <div class="w-[388px] border-l border-[#dde2ec] bg-white">
-        <WorkflowNodePanel
-          :node="selectedNode"
-          :readonly="isReadOnlyMode"
-          :disabled="operationDisabled"
-          @update-name="(value) => updateSelectedNode({ name: value })"
-          @update-description="(value) => updateSelectedNode({ description: value })"
-          @update-config="(payload) => updateSelectedNodeConfigField(payload.key, payload.value)"
-          @update-schemas="handleSchemaUpdate"
-          @close="selectNode(null)"
-          @delete="deleteSelectedNode"
-        />
+        <div
+          v-if="selectedNode"
+          class="absolute inset-y-0 right-0 z-30 w-[388px] border-l border-[#dde2ec] bg-white shadow-[-8px_0_24px_rgba(15,23,42,0.08)]"
+        >
+          <WorkflowNodePanel
+            :node="selectedNode"
+            :readonly="isReadOnlyMode"
+            :disabled="operationDisabled"
+            @update-name="(value) => updateSelectedNode({ name: value })"
+            @update-description="(value) => updateSelectedNode({ description: value })"
+            @update-config="(payload) => updateSelectedNodeConfigField(payload.key, payload.value)"
+            @update-schemas="handleSchemaUpdate"
+            @close="selectNode(null)"
+            @delete="deleteSelectedNode"
+          />
+        </div>
       </div>
     </div>
   </section>

@@ -8,16 +8,16 @@ function createNode(
   y: number,
   options?: Partial<WorkflowCanvasNode>,
 ): WorkflowCanvasNode {
+  const defaultData = getDefaultNodeData(registryId)
+
   return {
     id,
     type: "workflowNode",
     position: { x, y },
     data: {
-      ...getDefaultNodeData(registryId),
+      ...defaultData,
       status: "IDLE",
-      subtitle: options?.data?.subtitle as string | undefined,
-      muted: options?.data?.muted as boolean | undefined,
-      groupLabel: options?.data?.groupLabel as string | undefined,
+      ...(options?.data ?? {}),
     },
     draggable: true,
     selectable: true,
@@ -38,102 +38,143 @@ function createEdge(source: string, target: string, sourceHandle = "source", tar
   }
 }
 
-export function createWorkflowDemoGraph(): WorkflowGraphDef {
-  const loopGroup: WorkflowCanvasNode = {
-    id: "loop_group",
+export type CreateLoopBundleOptions = {
+  loopNodeId?: string
+  loopBodyId?: string
+  loopBodySize?: {
+    width: number
+    height: number
+  }
+}
+
+export type WorkflowLoopBundle = {
+  loopNode: WorkflowCanvasNode
+  loopBody: WorkflowCanvasNode
+  lifecycleEdge: WorkflowCanvasEdge
+}
+
+export function createLoopBundle(
+  loopNodePosition: { x: number; y: number },
+  loopBodyPosition: { x: number; y: number },
+  options: CreateLoopBundleOptions = {},
+): WorkflowLoopBundle {
+  const loopNodeId = options.loopNodeId ?? createNodeId("Loop")
+  const loopBodyId = options.loopBodyId ?? `${loopNodeId}_body`
+  const loopBodySize = options.loopBodySize ?? { width: 940, height: 320 }
+
+  const loopNode = createNode(loopNodeId, "Loop", loopNodePosition.x, loopNodePosition.y, {
+    data: {
+      ...getDefaultNodeData("Loop"),
+      name: "循环",
+      status: "IDLE",
+      loopPartnerId: loopBodyId,
+      loopScopeId: loopNodeId,
+    },
+  })
+
+  const loopBody: WorkflowCanvasNode = {
+    id: loopBodyId,
     type: "workflowGroup",
-    position: { x: 40, y: 336 },
+    position: {
+      x: loopBodyPosition.x,
+      y: loopBodyPosition.y,
+    },
     style: {
-      width: 1260,
-      height: 430,
+      width: loopBodySize.width,
+      height: loopBodySize.height,
     },
     data: {
       ...getDefaultNodeData("Loop"),
+      name: "循环体",
       status: "IDLE",
       groupLabel: "循环体",
+      isLoopBody: true,
+      loopPartnerId: loopNodeId,
+      loopScopeId: loopNodeId,
     },
     draggable: true,
     selectable: true,
     zIndex: -1,
   }
 
+  const lifecycleEdge = createEdge(loopNodeId, loopBodyId, "loop-body-source", "loop-body-target")
+
+  return {
+    loopNode,
+    loopBody,
+    lifecycleEdge,
+  }
+}
+
+export function createWorkflowDemoGraph(): WorkflowGraphDef {
+  const loopBundle = createLoopBundle(
+    { x: 708, y: 170 },
+    { x: 528, y: 366 },
+    {
+      loopNodeId: "loop",
+      loopBodyId: "loop_body",
+      loopBodySize: { width: 980, height: 360 },
+    },
+  )
+
   const nodes: WorkflowCanvasNode[] = [
-    createNode("start", "Start", 178, 192),
-    createNode("tool_search", "ToolNode", 716, 48),
-    createNode("selector", "Branch", 716, 198),
-    createNode("output_collect", "Output", 1138, 68),
-    createNode("search_result", "Output", 1138, 208, {
-      data: {
-        ...getDefaultNodeData("Output"),
-        name: "搜索结果",
-        subtitle: "支持中间过程的动态输出",
-      },
-    }),
-    createNode("news_merge", "AgentNode", 1138, 348),
-    createNode("exception_handle", "Output", 1138, 488, {
-      data: {
-        ...getDefaultNodeData("Output"),
-        name: "异常处理",
-      },
-    }),
-    createNode("end", "End", 1138, 628),
-    loopGroup,
-    createNode("loop_link_reader", "ToolNode", 128, 420, {
-      parentNode: "loop_group",
-      extent: "parent",
-      position: { x: 48, y: 136 },
+    createNode("start", "Start", 102, 170),
+    createNode("tool_search", "ToolNode", 408, 170, {
       data: {
         ...getDefaultNodeData("ToolNode"),
-        name: "LinkReaderPlugin",
-        subtitle: "抓取网页与 PDF",
+        name: "search",
+        subtitle: "int.count   int.cursor   str.input_query",
       },
     }),
-    createNode("loop_info_sort", "LLMNode", 468, 320, {
-      parentNode: "loop_group",
-      extent: "parent",
-      position: { x: 460, y: 58 },
-    }),
-    createNode("loop_filter", "Branch", 468, 470, {
-      parentNode: "loop_group",
-      extent: "parent",
-      position: { x: 460, y: 232 },
+    loopBundle.loopNode,
+    createNode("llm", "LLMNode", 1014, 170, {
       data: {
-        ...getDefaultNodeData("Branch"),
-        name: "消息",
+        ...getDefaultNodeData("LLMNode"),
+        name: "llm",
+        subtitle: "str.name   str.search_result",
       },
     }),
-    createNode("loop_set_var", "Output", 860, 400, {
-      parentNode: "loop_group",
+    createNode("end", "End", 1318, 170),
+    loopBundle.loopBody,
+    createNode("loop_model", "LLMNode", 676, 468, {
+      parentNode: "loop_body",
       extent: "parent",
-      position: { x: 856, y: 166 },
+      position: { x: 108, y: 98 },
       data: {
-        ...getDefaultNodeData("Output"),
-        name: "设置变量",
+        ...getDefaultNodeData("LLMNode"),
+        name: "大模型",
+        subtitle: "str.input",
+        loopScopeId: "loop",
+      },
+    }),
+    createNode("loop_image", "ToolNode", 1000, 468, {
+      parentNode: "loop_body",
+      extent: "parent",
+      position: { x: 488, y: 98 },
+      data: {
+        ...getDefaultNodeData("ToolNode"),
+        name: "图像生成",
+        subtitle: "str.data   str.msg",
+        loopScopeId: "loop",
       },
     }),
   ]
 
   const edges: WorkflowCanvasEdge[] = [
     createEdge("start", "tool_search"),
-    createEdge("start", "selector"),
-    createEdge("tool_search", "output_collect"),
-    createEdge("selector", "search_result"),
-    createEdge("selector", "news_merge"),
-    createEdge("search_result", "news_merge"),
-    createEdge("news_merge", "end"),
-    createEdge("selector", "exception_handle"),
-    createEdge("exception_handle", "end"),
-    createEdge("loop_link_reader", "loop_info_sort"),
-    createEdge("loop_link_reader", "loop_filter"),
-    createEdge("loop_info_sort", "loop_set_var"),
-    createEdge("loop_filter", "loop_set_var"),
-    createEdge("loop_set_var", "news_merge"),
+    createEdge("tool_search", "loop"),
+    createEdge("loop", "llm"),
+    createEdge("llm", "end"),
+    loopBundle.lifecycleEdge,
+    createEdge("loop_body", "loop_model", "source", "target"),
+    createEdge("loop_model", "loop_image"),
+    createEdge("loop_image", "loop_body", "source", "target"),
   ]
 
   return {
     nodes,
     edges,
-    viewport: { x: -96, y: -46, zoom: 0.6 },
+    viewport: { x: -44, y: -26, zoom: 0.7 },
   }
 }
 

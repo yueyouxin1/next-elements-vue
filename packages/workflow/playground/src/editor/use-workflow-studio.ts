@@ -9,11 +9,13 @@ import type {
 import { computed, ref, watch, type Ref } from "vue"
 import {
   cloneGraph,
+  createLoopBundle,
   createEmptyGraph,
   createNodeByRegistry,
   createWorkflowDemoGraph,
   findNodeById,
-  removeNodeFromGraph,
+  removeNodeFromGraphWithLoopLifecycle,
+  resolveLoopScope,
   runWorkflowMock,
   updateNodeById,
   validateGraph,
@@ -23,6 +25,26 @@ import type { WorkflowRegistryId } from "../../../src/base"
 export type UseWorkflowStudioOptions = {
   mode: Ref<WorkflowStudioMode>
 }
+
+function createWorkflowEdge(
+  source: string,
+  target: string,
+  sourceHandle = "source",
+  targetHandle = "target",
+): WorkflowCanvasEdge {
+  return {
+    id: `${source}-${target}-${Date.now()}`,
+    source,
+    target,
+    sourceHandle,
+    targetHandle,
+    type: "workflowEdge",
+    animated: false,
+    selectable: true,
+  }
+}
+
+type DeletedNodeSnapshot = Pick<WorkflowCanvasNode, "id" | "data">
 
 function mapRunEventToStatus(event: WorkflowRunEvent): WorkflowNodeRunStatus | null {
   if (!event.nodeId) {
@@ -135,7 +157,7 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
     const graph = cloneGraph(createWorkflowDemoGraph())
     nodes.value = graph.nodes
     edges.value = graph.edges
-    selectedNodeId.value = graph.nodes.find(node => node.data.registryId === "Start")?.id ?? graph.nodes[0]?.id ?? null
+    selectedNodeId.value = null
     zoomPercent.value = Math.round((graph.viewport?.zoom ?? 1) * 100)
     dirty.value = false
     queueMicrotask(() => {
@@ -152,16 +174,80 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
     selectedNodeId.value = nodeId
   }
 
+  function getRandomRootPosition(): { x: number; y: number } {
+    return {
+      x: 280 + Math.round(Math.random() * 240),
+      y: 160 + Math.round(Math.random() * 220),
+    }
+  }
+
+  function getRandomLoopChildPosition(loopBodyNode: WorkflowCanvasNode): { x: number; y: number } {
+    const loopBodyStyle = typeof loopBodyNode.style === "function" ? undefined : loopBodyNode.style
+    const width = Number(loopBodyStyle?.width ?? 940)
+    const height = Number(loopBodyStyle?.height ?? 320)
+    const safeWidth = Math.max(width - 360, 140)
+    const safeHeight = Math.max(height - 170, 80)
+
+    return {
+      x: 64 + Math.round(Math.random() * safeWidth),
+      y: 64 + Math.round(Math.random() * safeHeight),
+    }
+  }
+
+  function addLoopNode(): void {
+    const loopPosition = getRandomRootPosition()
+    const bundle = createLoopBundle(
+      loopPosition,
+      { x: loopPosition.x - 180, y: loopPosition.y + 196 },
+    )
+
+    nodes.value = [...nodes.value, bundle.loopNode, bundle.loopBody]
+    edges.value = [...edges.value, bundle.lifecycleEdge]
+    selectedNodeId.value = bundle.loopNode.id
+  }
+
+  function addNodeToLoopScope(registryId: WorkflowRegistryId, scope: { loopNodeId: string; loopBodyId: string }): void {
+    const loopBodyNode = findNodeById(nodes.value, scope.loopBodyId)
+    if (!loopBodyNode) {
+      return
+    }
+
+    const nextNode = createNodeByRegistry(registryId, getRandomLoopChildPosition(loopBodyNode))
+    const scopedNode: WorkflowCanvasNode = {
+      ...nextNode,
+      parentNode: scope.loopBodyId,
+      extent: "parent",
+      data: {
+        ...nextNode.data,
+        loopScopeId: scope.loopNodeId,
+      },
+    }
+
+    nodes.value = [...nodes.value, scopedNode]
+    selectedNodeId.value = scopedNode.id
+  }
+
   function addNode(registryId: WorkflowRegistryId): void {
     if (interactionBlocked.value) {
       return
     }
 
-    const nextNode = createNodeByRegistry(registryId, {
-      x: 260 + Math.round(Math.random() * 180),
-      y: 160 + Math.round(Math.random() * 200),
-    })
+    if (registryId === "Loop") {
+      addLoopNode()
+      markDirty()
+      return
+    }
 
+    const selectedId = selectedNodeId.value
+    const loopScope = typeof selectedId === "string" ? resolveLoopScope(nodes.value, selectedId) : null
+
+    if (loopScope && registryId !== "Start" && registryId !== "End") {
+      addNodeToLoopScope(registryId, loopScope)
+      markDirty()
+      return
+    }
+
+    const nextNode = createNodeByRegistry(registryId, getRandomRootPosition())
     nodes.value = [...nodes.value, nextNode]
     selectedNodeId.value = nextNode.id
     markDirty()
@@ -172,7 +258,7 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
       return
     }
 
-    const graph = removeNodeFromGraph(
+    const graph = removeNodeFromGraphWithLoopLifecycle(
       {
         nodes: nodes.value,
         edges: edges.value,
@@ -183,6 +269,40 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
     nodes.value = graph.nodes
     edges.value = graph.edges
     selectedNodeId.value = null
+    markDirty()
+  }
+
+  function deleteNodesWithLoopLifecycle(deletedNodes: DeletedNodeSnapshot[]): void {
+    if (interactionBlocked.value || deletedNodes.length === 0) {
+      return
+    }
+
+    let graph = {
+      nodes: nodes.value,
+      edges: edges.value,
+    }
+
+    const removedIds = new Set<string>()
+    for (const deletedNode of deletedNodes) {
+      removedIds.add(deletedNode.id)
+
+      const hasLoopPartner = typeof deletedNode.data.loopPartnerId === "string"
+      const isLoopNode = deletedNode.data.registryId === "Loop"
+      const isLoopBody = deletedNode.data.isLoopBody === true
+      if (hasLoopPartner && (isLoopNode || isLoopBody)) {
+        removedIds.add(deletedNode.data.loopPartnerId as string)
+      }
+    }
+
+    for (const removableId of removedIds) {
+      graph = removeNodeFromGraphWithLoopLifecycle(graph, removableId)
+    }
+
+    nodes.value = graph.nodes
+    edges.value = graph.edges
+    if (selectedNodeId.value && !findNodeById(nodes.value, selectedNodeId.value)) {
+      selectedNodeId.value = null
+    }
     markDirty()
   }
 
@@ -231,17 +351,14 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
       return
     }
 
-    const nextEdge = {
-      ...connection,
-      id: `${connection.source}-${connection.target}-${Date.now()}`,
-      type: "workflowEdge" as const,
-      sourceHandle: connection.sourceHandle ?? "source",
-      targetHandle: connection.targetHandle ?? "target",
-      animated: false,
-      selectable: true,
-    }
+    const nextEdge = createWorkflowEdge(
+      connection.source,
+      connection.target,
+      connection.sourceHandle ?? "source",
+      connection.targetHandle ?? "target",
+    )
 
-    edges.value = [...edges.value, nextEdge as WorkflowCanvasEdge]
+    edges.value = [...edges.value, nextEdge]
     markDirty()
   }
 
@@ -332,6 +449,7 @@ export function useWorkflowStudio(options: UseWorkflowStudioOptions) {
     saveDraft,
     runWorkflow,
     deleteSelectedNode,
+    deleteNodesWithLoopLifecycle,
     updateSelectedNode,
     updateSelectedNodeConfigField,
   }

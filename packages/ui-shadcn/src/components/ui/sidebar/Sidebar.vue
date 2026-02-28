@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { SidebarProps } from "."
 import { cn } from "@repo/ui-shadcn/lib/utils"
-import { Sheet, SheetContent } from '@repo/ui-shadcn/components/ui/sheet'
-import SheetDescription from '@repo/ui-shadcn/components/ui/sheet/SheetDescription.vue'
-import SheetHeader from '@repo/ui-shadcn/components/ui/sheet/SheetHeader.vue'
-import SheetTitle from '@repo/ui-shadcn/components/ui/sheet/SheetTitle.vue'
+import { Sheet, SheetContent } from "@repo/ui-shadcn/components/ui/sheet"
+import SheetDescription from "@repo/ui-shadcn/components/ui/sheet/SheetDescription.vue"
+import SheetHeader from "@repo/ui-shadcn/components/ui/sheet/SheetHeader.vue"
+import SheetTitle from "@repo/ui-shadcn/components/ui/sheet/SheetTitle.vue"
 import { SIDEBAR_WIDTH_MOBILE, useSidebar } from "./utils"
 
 defineOptions({

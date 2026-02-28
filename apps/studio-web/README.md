@@ -16,8 +16,9 @@ Vue app shell entry.
 - bundled assets: `src/assets/*`
 - third-party component consumption via aliases:
   - `@repo/common/*` -> shared cross-app modules (i18n/types/utils)
+  - `@repo/editor/*` -> shared editor modules
   - `@repo/ui-ai-elements/*` -> `packages/ui-ai-elements`
   - `@repo/ui-shadcn/*` -> `packages/ui-shadcn`
   - app-local imports use `@app/*`
 - globally registered shared UI:
-  - `MonacoEditor` from `@repo/common`
+  - `MonacoEditor` / `MdEditor` / `CodeMirrorEditor` / `CodeMirrorMdEditor` from `@repo/editor`

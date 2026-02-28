@@ -1,5 +1,5 @@
 {
-  "name": "next-elements-vue",
+  "name": "prismaspace-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,10 +9,16 @@
     "typecheck": "vue-tsc -p tsconfig.app.build.json --noEmit",
     "strict-check": "vue-tsc -b --noEmit",
     "preview": "vite preview",
-    "check:aliases": "node ./scripts/validate-import-aliases.mjs"
+    "check:aliases": "node ./scripts/validate-import-aliases.mjs",
+    "test:smoke": "node ./scripts/smoke-saas-routes.mjs"
   },
   "dependencies": {
+    "@internationalized/date": "^3.11.0",
     "@codemirror/commands": "^6.10.2",
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.11",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/lang-json": "^6.0.2",
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/language": "^6.12.1",
     "@codemirror/state": "^6.5.4",
@@ -49,9 +55,13 @@
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
     "tokenlens": "^1.3.1",
+    "vaul-vue": "^0.4.1",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.24",
     "vue-i18n": "^11.2.8",
+    "vue-input-otp": "^0.3.2",
     "vue-router": "^4.6.4",
+    "vue-sonner": "^2.0.9",
     "vue-stick-to-bottom": "^0.1.0",
     "vue-stream-markdown": "^0.5.1",
     "zod": "^4.3.6"

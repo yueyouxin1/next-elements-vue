@@ -1,11 +1,14 @@
 import type { Component } from "vue"
 import AlertStatusDemo from "@app/components/playground/AlertStatusDemo.vue"
 import ButtonVariantsDemo from "@app/components/playground/ButtonVariantsDemo.vue"
-import CodeMirrorMdEditorDemo from "@app/components/playground/md-editor/CodeMirrorMdEditorDemo.vue"
+import CodeMirrorEditorDemo from "@app/components/playground/CodeMirrorEditorDemo.vue"
+import CodeMirrorMdEditorDemo from "@app/components/playground/expression-md-editor/codemirror-expression-md-editor/CodeMirrorMdEditorDemo.vue"
 import FormGeneratorDemo from "@app/components/playground/form-generator/FormGeneratorDemo.vue"
 import FormCardDemo from "@app/components/playground/FormCardDemo.vue"
-import MdEditorDemo from "@app/components/playground/md-editor/MdEditorDemo.vue"
+import MdEditorDemo from "@app/components/playground/expression-md-editor/monaco-expression-md-editor/MdEditorDemo.vue"
 import MonacoEditorDemo from "@app/components/playground/MonacoEditorDemo.vue"
+import ParamSchemaEditorsDemo from "@app/components/playground/param-schema-editor/ParamSchemaEditorsDemo.vue"
+import WorkflowInputTreeDemo from "@app/components/playground/workflow-input-tree/WorkflowInputTreeDemo.vue"
 import WorkflowStudioDemo from "@app/components/playground/workflow/WorkflowStudioDemo.vue"
 
 export type ComponentDemo = {
@@ -53,18 +56,39 @@ export const componentDemos: ComponentDemo[] = [
     component: MonacoEditorDemo,
   },
   {
-    slug: "md-editor",
-    title: "Md Editor",
-    description: "基于 Monaco 的 Markdown 编辑器，支持表达式触发自定义 Vue 弹窗。",
+    slug: "codemirror-editor",
+    title: "CodeMirror Editor",
+    description: "全局可复用 CodeMirrorEditor：支持语言扩展、只读、换行与主题切换。",
+    tags: ["editor", "codemirror", "code", "shared"],
+    component: CodeMirrorEditorDemo,
+  },
+  {
+    slug: "monaco-expression-md-editor",
+    title: "Monaco Expression Md Editor",
+    description: "基于 Monaco 的 Markdown 表达式编辑器，支持表达式弹窗与高亮，不支持 block 组件渲染。",
     tags: ["markdown", "editor", "expression", "popup"],
     component: MdEditorDemo,
   },
   {
-    slug: "codemirror-md-editor",
-    title: "CodeMirror Md Editor",
-    description: "基于 CodeMirror 6 的 Markdown 编辑器，支持表达式 replace/highlight 与变量面板。",
+    slug: "codemirror-expression-md-editor",
+    title: "CodeMirror Expression Md Editor",
+    description: "基于 CodeMirror 6 的 Markdown 表达式编辑器，支持 replace/highlight、变量面板和 block 组件渲染。",
     tags: ["markdown", "editor", "codemirror", "expression"],
     component: CodeMirrorMdEditorDemo,
+  },
+  {
+    slug: "param-schema-editor",
+    title: "Param Schema Editor",
+    description: "参数 Schema 编辑器迁移版：regular/professional 独立组件，支持导入导出、校验、undo/redo。",
+    tags: ["schema", "parameter", "editor", "runtime", "json-schema"],
+    component: ParamSchemaEditorsDemo,
+  },
+  {
+    slug: "workflow-input-tree",
+    title: "Workflow Input Tree",
+    description: "InputTree 像素级复刻 demo：支持层级编辑、折叠、列宽比与限制态展示。",
+    tags: ["workflow", "input-tree", "form", "playground"],
+    component: WorkflowInputTreeDemo,
   },
   {
     slug: "workflow-studio",

@@ -23,6 +23,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, './packages/ui-reka/src'),
       },
       {
+        find: '@repo/editor',
+        replacement: path.resolve(__dirname, './packages/editor/src'),
+      },
+      {
         find: '@repo/common',
         replacement: path.resolve(__dirname, './packages/common/src'),
       },

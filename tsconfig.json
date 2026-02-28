@@ -14,6 +14,8 @@
       "@repo/ui-shadcn/*": ["./packages/ui-shadcn/src/*"],
       "@repo/ui-reka": ["./packages/ui-reka/src/index.ts"],
       "@repo/ui-reka/*": ["./packages/ui-reka/src/*"],
+      "@repo/editor": ["./packages/editor/src/index.ts"],
+      "@repo/editor/*": ["./packages/editor/src/*"],
       "@repo/common": ["./packages/common/src/index.ts"],
       "@repo/common/*": ["./packages/common/src/*"],
       "@repo/generator": ["./packages/generator/src/index.ts"],

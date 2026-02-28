@@ -4,7 +4,8 @@
 
 - `foundation`: app foundation capabilities.
 - `arch`: cross-domain architecture capabilities.
-- `common`: shared components and utilities (including `expressionTool`).
+- `common`: shared cross-domain modules and utilities (including `expressionTool`).
+- `editor`: dedicated editor package (Monaco/CodeMirror editor families and param-schema-editor).
 - `domain-demo`: placeholder for the first domain split.
 - `generator`: generator/runtime-oriented modules (including dynamic form generator runtime).
 - `workflow`: reserved for future workflow subsystems.
