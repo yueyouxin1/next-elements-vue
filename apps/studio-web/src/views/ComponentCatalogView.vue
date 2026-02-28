@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import { RouterLink } from "vue-router"
 import { Badge } from "@repo/ui-shadcn/components/ui/badge"
 import { Button } from "@repo/ui-shadcn/components/ui/button"
@@ -10,10 +11,24 @@ import {
   CardTitle,
 } from "@repo/ui-shadcn/components/ui/card"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@repo/ui-shadcn/components/ui/dialog"
+import { Label } from "@repo/ui-shadcn/components/ui/label"
+import { Switch } from "@repo/ui-shadcn/components/ui/switch"
+import {
   IconChevronRight,
   IconDashboard,
+  IconSettings,
 } from "@tabler/icons-vue"
+import { usePlatformTheme } from "@app/core/theme"
 import { componentDemos } from "@app/data/component-demos"
+
+const isSettingsOpen = ref(false)
+const { themes, selectedTheme, currentThemeOption, isDarkMode, setTheme } = usePlatformTheme()
 </script>
 
 <template>
@@ -33,8 +48,56 @@ import { componentDemos } from "@app/data/component-demos"
         <Badge variant="secondary" class="rounded-full px-2.5 py-0.5 text-xs">
           {{ componentDemos.length }} demos
         </Badge>
+        <Button variant="outline" size="sm" class="h-8 gap-1.5" @click="isSettingsOpen = true">
+          <IconSettings class="size-3.5" />
+          Theme
+        </Button>
       </div>
     </header>
+
+    <Dialog :open="isSettingsOpen" @update:open="isSettingsOpen = $event">
+      <DialogContent class="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Playground Theme</DialogTitle>
+          <DialogDescription>
+            当前主题：{{ currentThemeOption.label }}。以下设置为平台统一主题能力。
+          </DialogDescription>
+        </DialogHeader>
+        <div class="space-y-6">
+          <div class="space-y-3">
+            <Label>Theme Palette</Label>
+            <div class="grid gap-2 sm:grid-cols-2">
+              <Button
+                v-for="theme in themes"
+                :key="theme.value"
+                :variant="selectedTheme === theme.value ? 'default' : 'outline'"
+                class="justify-between"
+                @click="setTheme(theme.value)"
+              >
+                <span>{{ theme.label }}</span>
+                <span class="text-muted-foreground text-xs">{{ theme.description }}</span>
+              </Button>
+            </div>
+          </div>
+          <div class="border rounded-lg p-4">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="text-sm font-medium">
+                  Dark mode
+                </p>
+                <p class="text-muted-foreground text-xs">
+                  平台全局明暗模式切换。
+                </p>
+              </div>
+              <Switch
+                :model-value="isDarkMode"
+                @update:model-value="isDarkMode = !!$event"
+              />
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
 
     <section class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <RouterLink

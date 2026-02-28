@@ -4,13 +4,13 @@ export const description = "A dashboard with sidebar, data table, and analytics 
 </script>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue"
-import { useColorMode, useStorage } from "@vueuse/core"
-import AppSidebar from "@app/components/AppSidebar.vue"
-// import ChartAreaInteractive from "@app/components/ChartAreaInteractive.vue"
-import DataTable from "@app/components/DataTable.vue"
-import SectionCards from "@app/components/SectionCards.vue"
-import SiteHeader from "@app/components/SiteHeader.vue"
+import { ref } from "vue"
+import AppSidebar from "@app/components/playground/dashBoard-D]demo/AppSidebar.vue"
+// import ChartAreaInteractive from "@app/components/playground/dashBoard-D]demo/ChartAreaInteractive.vue"
+import DataTable from "@app/components/playground/dashBoard-D]demo/DataTable.vue"
+import SectionCards from "@app/components/playground/dashBoard-D]demo/SectionCards.vue"
+import SiteHeader from "@app/components/playground/dashBoard-D]demo/SiteHeader.vue"
+import { usePlatformTheme } from "@app/core/theme"
 import { Button } from "@repo/ui-shadcn/components/ui/button"
 import {
   Dialog,
@@ -26,91 +26,8 @@ import {
 } from "@repo/ui-shadcn/components/ui/sidebar"
 import { Switch } from "@repo/ui-shadcn/components/ui/switch"
 
-type ThemeName = "default" | "stone" | "zinc" | "gray" | "slate" | "red" | "rose" | "orange" | "green" | "blue" | "yellow" | "violet"
-
-const themes: Array<{ value: ThemeName, label: string, description: string }> = [
-  {
-    value: "default",
-    label: "Neutral",
-    description: "Official default palette.",
-  },
-  {
-    value: "stone",
-    label: "Stone",
-    description: "Stone base color.",
-  },
-  {
-    value: "zinc",
-    label: "Zinc",
-    description: "Zinc base color.",
-  },
-  {
-    value: "gray",
-    label: "Gray",
-    description: "Gray base color.",
-  },
-  {
-    value: "slate",
-    label: "Slate",
-    description: "Slate base color.",
-  },
-  {
-    value: "red",
-    label: "Red",
-    description: "Red base color.",
-  },
-  {
-    value: "rose",
-    label: "Rose",
-    description: "Rose base color.",
-  },
-  {
-    value: "orange",
-    label: "Orange",
-    description: "Orange base color.",
-  },
-  {
-    value: "green",
-    label: "Green",
-    description: "Green base color.",
-  },
-  {
-    value: "blue",
-    label: "Blue",
-    description: "Blue base color.",
-  },
-  {
-    value: "yellow",
-    label: "Yellow",
-    description: "Yellow base color.",
-  },
-  {
-    value: "violet",
-    label: "Violet",
-    description: "Violet base color.",
-  },
-]
-
 const isSettingsOpen = ref(false)
-const selectedTheme = useStorage<ThemeName>("dashboard-theme", "default")
-const colorMode = useColorMode()
-
-const isDarkMode = computed({
-  get: () => colorMode.value === "dark",
-  set: value => (colorMode.value = value ? "dark" : "light"),
-})
-
-watch(
-  selectedTheme,
-  (theme) => {
-    if (theme === "default") {
-      delete document.documentElement.dataset.theme
-      return
-    }
-    document.documentElement.dataset.theme = theme
-  },
-  { immediate: true },
-)
+const { themes, selectedTheme, isDarkMode, setTheme } = usePlatformTheme()
 
 const data = [
   {
@@ -413,7 +330,7 @@ const data = [
                   :key="theme.value"
                   :variant="selectedTheme === theme.value ? 'default' : 'outline'"
                   class="justify-between"
-                  @click="selectedTheme = theme.value"
+                  @click="setTheme(theme.value)"
                 >
                   <span>{{ theme.label }}</span>
                   <span class="text-muted-foreground text-xs">{{ theme.description }}</span>

@@ -20,11 +20,11 @@ import {
   GalleryVerticalEnd,
   SquareTerminal,
 } from "lucide-vue-next"
-import NavDocuments from '@app/components/NavDocuments.vue'
-import NavMain from '@app/components/NavMain.vue'
-import NavSecondary from '@app/components/NavSecondary.vue'
-import NavUser from '@app/components/NavUser.vue'
-import TeamSwitcher from "@app/components/TeamSwitcher.vue"
+import NavDocuments from '@app/components/playground/dashBoard-D]demo/NavDocuments.vue'
+import NavMain from '@app/components/playground/dashBoard-D]demo/NavMain.vue'
+import NavSecondary from '@app/components/playground/dashBoard-D]demo/NavSecondary.vue'
+import NavUser from '@app/components/playground/dashBoard-D]demo/NavUser.vue'
+import TeamSwitcher from "@app/components/playground/dashBoard-D]demo/TeamSwitcher.vue"
 import {
   Sidebar,
   SidebarContent,

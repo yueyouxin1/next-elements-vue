@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import DashBoard from "@app/components/DashBoard.vue"
+import ComponentCatalogView from "@app/views/ComponentCatalogView.vue"
 </script>
 
 <template>
-  <DashBoard />
+  <ComponentCatalogView />
 </template>

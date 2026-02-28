@@ -16,8 +16,8 @@ const demo = computed(() => getComponentDemoBySlug(slug.value))
 </script>
 
 <template>
-  <main class="mx-auto flex min-h-dvh w-full max-w-[1800px] flex-col px-2 py-2 md:px-3 md:py-3">
-    <header class="sticky top-0 z-20 mb-2 border-b bg-background/85 px-1 py-1.5 backdrop-blur md:px-2">
+  <main class="mx-auto flex h-dvh w-full max-w-[1800px] flex-col overflow-hidden px-2 py-2 md:px-3 md:py-3">
+    <header class="mb-2 shrink-0 border-b bg-background px-1 py-1.5 md:px-2">
       <div class="flex items-center gap-2">
         <RouterLink to="/components" aria-label="返回组件列表" title="返回组件列表">
           <Button variant="ghost" size="icon-sm">
@@ -40,13 +40,13 @@ const demo = computed(() => getComponentDemoBySlug(slug.value))
       </div>
     </header>
 
-    <section v-if="demo" class="min-h-0 flex-1 overflow-auto">
+    <section v-if="demo" class="min-h-0 flex-1 overflow-y-auto">
       <div class="h-full rounded-lg border bg-background/30 p-1.5 md:p-2">
           <component :is="demo.component" />
       </div>
     </section>
 
-    <section v-else class="flex min-h-0 flex-1 items-center justify-center">
+    <section v-else class="min-h-0 flex-1 overflow-y-auto">
       <Card>
         <CardHeader>
           <CardTitle>未找到对应组件</CardTitle>

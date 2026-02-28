@@ -3,6 +3,7 @@ import AlertStatusDemo from "@app/components/playground/AlertStatusDemo.vue"
 import ButtonVariantsDemo from "@app/components/playground/ButtonVariantsDemo.vue"
 import CodeMirrorEditorDemo from "@app/components/playground/CodeMirrorEditorDemo.vue"
 import CodeMirrorMdEditorDemo from "@app/components/playground/expression-md-editor/codemirror-expression-md-editor/CodeMirrorMdEditorDemo.vue"
+import DashBoardDemo from "@app/components/playground/dashBoard-D]demo/DashBoard.vue"
 import FormGeneratorDemo from "@app/components/playground/form-generator/FormGeneratorDemo.vue"
 import FormCardDemo from "@app/components/playground/FormCardDemo.vue"
 import MdEditorDemo from "@app/components/playground/expression-md-editor/monaco-expression-md-editor/MdEditorDemo.vue"
@@ -20,6 +21,13 @@ export type ComponentDemo = {
 }
 
 export const componentDemos: ComponentDemo[] = [
+  {
+    slug: "dashboard",
+    title: "DashBoard",
+    description: "原首页 DashBoard，现降级为独立 playground demo。",
+    tags: ["dashboard", "layout", "demo"],
+    component: DashBoardDemo,
+  },
   {
     slug: "button-variants",
     title: "Button",
