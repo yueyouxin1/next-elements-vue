@@ -3,7 +3,7 @@ import AlertStatusDemo from "@app/components/playground/AlertStatusDemo.vue"
 import ButtonVariantsDemo from "@app/components/playground/ButtonVariantsDemo.vue"
 import CodeMirrorEditorDemo from "@app/components/playground/CodeMirrorEditorDemo.vue"
 import CodeMirrorMdEditorDemo from "@app/components/playground/expression-md-editor/codemirror-expression-md-editor/CodeMirrorMdEditorDemo.vue"
-import DashBoardDemo from "@app/components/playground/dashBoard-D]demo/DashBoard.vue"
+import DashBoardDemo from "@app/components/playground/dashBoard-demo/DashBoard.vue"
 import FormGeneratorDemo from "@app/components/playground/form-generator/FormGeneratorDemo.vue"
 import FormCardDemo from "@app/components/playground/FormCardDemo.vue"
 import MdEditorDemo from "@app/components/playground/expression-md-editor/monaco-expression-md-editor/MdEditorDemo.vue"
@@ -24,8 +24,8 @@ export const componentDemos: ComponentDemo[] = [
   {
     slug: "dashboard",
     title: "DashBoard",
-    description: "原首页 DashBoard，现降级为独立 playground demo。",
-    tags: ["dashboard", "layout", "demo"],
+    description: "标准 Dashboard UI 风格参考实现，包含侧边栏、统计卡片与数据表格。",
+    tags: ["dashboard", "standard-ui", "reference"],
     component: DashBoardDemo,
   },
   {

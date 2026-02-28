@@ -2,7 +2,6 @@
 import { Button } from '@repo/ui-shadcn/components/ui/button'
 import { Separator } from '@repo/ui-shadcn/components/ui/separator'
 import { SidebarTrigger } from '@repo/ui-shadcn/components/ui/sidebar'
-import { RouterLink } from 'vue-router'
 </script>
 
 <template>
@@ -17,11 +16,6 @@ import { RouterLink } from 'vue-router'
         Documents
       </h1>
       <div class="ml-auto flex items-center gap-2">
-        <Button variant="outline" as-child size="sm">
-          <RouterLink to="/components">
-            Components
-          </RouterLink>
-        </Button>
         <Button variant="ghost" as-child size="sm" class="hidden sm:flex">
           <a
             href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"

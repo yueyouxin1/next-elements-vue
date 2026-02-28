@@ -5,11 +5,11 @@ export const description = "A dashboard with sidebar, data table, and analytics 
 
 <script setup lang="ts">
 import { ref } from "vue"
-import AppSidebar from "@app/components/playground/dashBoard-D]demo/AppSidebar.vue"
-// import ChartAreaInteractive from "@app/components/playground/dashBoard-D]demo/ChartAreaInteractive.vue"
-import DataTable from "@app/components/playground/dashBoard-D]demo/DataTable.vue"
-import SectionCards from "@app/components/playground/dashBoard-D]demo/SectionCards.vue"
-import SiteHeader from "@app/components/playground/dashBoard-D]demo/SiteHeader.vue"
+import AppSidebar from "@app/components/playground/dashBoard-demo/AppSidebar.vue"
+// import ChartAreaInteractive from "@app/components/playground/dashBoard-demo/ChartAreaInteractive.vue"
+import DataTable from "@app/components/playground/dashBoard-demo/DataTable.vue"
+import SectionCards from "@app/components/playground/dashBoard-demo/SectionCards.vue"
+import SiteHeader from "@app/components/playground/dashBoard-demo/SiteHeader.vue"
 import { usePlatformTheme } from "@app/core/theme"
 import { Button } from "@repo/ui-shadcn/components/ui/button"
 import {
