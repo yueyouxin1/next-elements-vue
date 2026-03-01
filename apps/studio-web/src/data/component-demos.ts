@@ -4,6 +4,7 @@ import ButtonVariantsDemo from "@app/components/playground/ButtonVariantsDemo.vu
 import CodeMirrorEditorDemo from "@app/components/playground/CodeMirrorEditorDemo.vue"
 import CodeMirrorMdEditorDemo from "@app/components/playground/expression-md-editor/codemirror-expression-md-editor/CodeMirrorMdEditorDemo.vue"
 import DashBoardDemo from "@app/components/playground/dashBoard-demo/DashBoard.vue"
+import DatabaseIdeDemo from "@app/components/playground/database-ide"
 import FormGeneratorDemo from "@app/components/playground/form-generator/FormGeneratorDemo.vue"
 import FormCardDemo from "@app/components/playground/FormCardDemo.vue"
 import MdEditorDemo from "@app/components/playground/expression-md-editor/monaco-expression-md-editor/MdEditorDemo.vue"
@@ -27,6 +28,13 @@ export const componentDemos: ComponentDemo[] = [
     description: "标准 Dashboard UI 风格参考实现，包含侧边栏、统计卡片与数据表格。",
     tags: ["dashboard", "standard-ui", "reference"],
     component: DashBoardDemo,
+  },
+  {
+    slug: "database-ide",
+    title: "Database IDE",
+    description: "Modern Database IDE Workbench 参考实现",
+    tags: ["database", "ide", "editor", "datagrid", "playground"],
+    component: DatabaseIdeDemo,
   },
   {
     slug: "button-variants",

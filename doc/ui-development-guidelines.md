@@ -49,12 +49,12 @@
 
 新增自定义组件或需要参考实现方式时，必须优先在以下项目中查找匹配模板或示例用法，再进行实现与封装：
 
-1. `reference_example\shadcn-vue-dev\deprecated\www`
-2. `reference_example\ai-elements-vue-main\apps\www`
+1. `reference_example\shadcn-vue-dev`
+2. `reference_example\ai-elements-vue-main`
 
 - 应当优先查找与目标场景最接近的页面结构、交互模式与组件组合方式。
 - 建议复用已验证的实现思路，再结合本仓库分层（`ui-reka` -> `ui-shadcn` -> `ui-ai-elements`）完成适配。
 - 禁止在未检索参考项目的情况下直接开始大规模自定义实现。
 
 ## 6. 示例UI风格
-常规：`apps\studio-web\src\components\DashBoard.vue`
+常规：`reference_example\shadcn-vue-dev`
